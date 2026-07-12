@@ -116,6 +116,7 @@ class Circle3d:
         self.line_style = line_style
         self.color = color
         self.alpha = alpha
+        self.is_visible = True
 
         self.angle_space = np.arange(0, 360)
         self._update_diagram()
@@ -127,9 +128,6 @@ class Circle3d:
     def set_r(self, r):
         self.r = r
         self._update_diagram()
-        self.plt_circle.set_xdata(self.x_circle)
-        self.plt_circle.set_ydata(self.y_circle)
-        self.plt_circle.set_3d_properties(self.z_circle)
 
     def set_y(self, y):
         if self.direction == "y":
@@ -140,8 +138,12 @@ class Circle3d:
         self.plt_circle.set_3d_properties(self.z_circle)
 
     def _update_diagram(self):
-        self.cos_data = self.r * np.cos(self.angle_space * np.pi / 180.) + self.x
-        self.sin_data = self.r * np.sin(self.angle_space * np.pi / 180.) + self.y
+        if self.is_visible:
+            r = self.r
+        else:
+            r = 0
+        self.cos_data = r * np.cos(self.angle_space * np.pi / 180.) + self.x
+        self.sin_data = r * np.sin(self.angle_space * np.pi / 180.) + self.y
         self.plain_data = self.angle_space * 0. + self.z
 
         if self.direction == "x":
@@ -150,6 +152,10 @@ class Circle3d:
             self.x_circle, self.y_circle, self.z_circle = self.cos_data, self.plain_data, self.sin_data
         else:  # "z"
             self.x_circle, self.y_circle, self.z_circle = self.cos_data, self.sin_data, self.plain_data
+
+    def set_is_visible(self, value):
+        self.is_visible = value
+        self._update_diagram()
 
 
 class WavedCircle3d:
@@ -247,6 +253,7 @@ class Arrow3d:
         self.line_width = line_width
         self.line_style = line_style
         self.arrow_length_ratio = arrow_length_ratio
+        self.is_visible = True
 
         self.qvr = self.ax.quiver(self.x, self.y, self.z, self.u, self.v, self.w,
                                   length=1, color=self.color, normalize=False,
@@ -254,8 +261,12 @@ class Arrow3d:
                                   arrow_length_ratio=self.arrow_length_ratio)
 
     def _update_quiver(self):
+        if self.is_visible:
+            u, v, w = self.u, self.v, self.w
+        else:
+            u, v, w = 0, 0, 0
         self.qvr.remove()
-        self.qvr = self.ax.quiver(self.x, self.y, self.z, self.u, self.v, self.w,
+        self.qvr = self.ax.quiver(self.x, self.y, self.z, u, v, w,
                                   length=1, color=self.color, normalize=False,
                                   linewidth=self.line_width, linestyle=self.line_style,
                                   arrow_length_ratio=self.arrow_length_ratio)
@@ -270,6 +281,10 @@ class Arrow3d:
 
     def get_vector(self):
         return np.array([self.u, self.v, self.w])
+
+    def set_is_visible(self, value):
+        self.is_visible = value
+        self._update_quiver()
 
 
 class LineVector:
@@ -366,8 +381,12 @@ def create_visual_controls():
         is_show_spiral = not is_show_spiral
         if is_show_spiral:
             waved_circle_z.plt_circle_hx.set_visible(True)
+            arrow.set_is_visible(True)
+            circle_y.set_is_visible(True)
         else:
             waved_circle_z.plt_circle_hx.set_visible(False)
+            arrow.set_is_visible(False)
+            circle_y.set_is_visible(False)
 
     chk_spiral = tk.Checkbutton(frm_visual, text="Spiral", command=switch_spiral)
     chk_spiral.select()
