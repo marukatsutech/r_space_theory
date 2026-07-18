@@ -182,18 +182,18 @@ def set_k(value):
 
 def create_parameter_setter():
     # Controls for the major radius (Rotation Vector)
-    frm_r_large = ttk.Labelframe(root, relief='ridge', text="Radius (Large)", labelanchor='n')
+    frm_r_large = ttk.Labelframe(root, relief='ridge', text="Radius (Phase circle)", labelanchor='n')
     frm_r_large.pack(side='left', padx=5)
     var_r_large = tk.StringVar(root, value=str(r_rotation_vector))
     # Increased the upper limit 'to' from 2.0 to 3.0 to give more room for a larger minor radius
     spn_r_large = tk.Spinbox(
-        frm_r_large, textvariable=var_r_large, format='%.1f', from_=0.5, to=3.0, increment=0.1,
+        frm_r_large, textvariable=var_r_large, format='%.1f', from_=-3.0, to=3.0, increment=0.1,
         command=lambda: set_radius_rotation_vector(float(var_r_large.get())), width=5
     )
     spn_r_large.pack(side='left', padx=2)
 
     # Controls for the minor radius (Color Charge)
-    frm_r_small = ttk.Labelframe(root, relief='ridge', text="r (Color Charge)", labelanchor='n')
+    frm_r_small = ttk.Labelframe(root, relief='ridge', text="Radius (Color Charge)", labelanchor='n')
     frm_r_small.pack(side='left', padx=5)
     var_r_small = tk.StringVar(root, value=str(r_color_charge))
     # FIX: Explicitly expanded 'to' to 1.5 so it can easily go beyond 0.3
@@ -265,7 +265,7 @@ def update_diagrams():
 
     # Update the visual line connecting all marker endpoints (Phase Ring)
     if ring_line is None:
-        ring_line, = ax0.plot(marker_x, marker_y, marker_z, color="red", linewidth=2, label="Phase Ring")
+        ring_line, = ax0.plot(marker_x, marker_y, marker_z, color="red", linewidth=2, label="Phase circle")
         ax0.legend(loc='upper right')
     else:
         ring_line.set_data_3d(marker_x, marker_y, marker_z)
