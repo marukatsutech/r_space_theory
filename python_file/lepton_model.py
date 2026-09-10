@@ -418,7 +418,7 @@ class LeptonApp:
         self.ax0.set_xlabel("X")
         self.ax0.set_ylabel("Y")
         self.ax0.set_zlabel("Z")
-        self.ax0.set_title(self.title)
+        self.ax0.set_title("Electron")
 
         # --- ANIMATION CONTROL ---
         self.is_playing = False
@@ -433,13 +433,21 @@ class LeptonApp:
         # Toggle mode (electron:0, neutrino:1)
         self.is_electron = True
         self.btn_frame = ttk.Frame(self.root)
-        self.btn_frame.pack(fill=tk.X, pady=10)
+        self.btn_frame.pack(side="left", fill=tk.X, pady=10)
         ttk.Button(self.btn_frame, text="Electron / Neutrino", command=self.toggle_mode).pack(side=tk.LEFT, padx=5)
+
+        self.is_electron_1 = True
+        self.btn_frame = ttk.Frame(self.root)
+        self.btn_frame.pack(fill=tk.X, pady=10)
+        ttk.Button(self.btn_frame, text="Electron / Anti-neutrino", command=self.toggle_mode_reverse).pack(side=tk.LEFT, padx=5)
 
         # counter label
         self.counter_var = tk.StringVar(value="Step: 0")
         self.counter_label = ttk.Label(self.btn_frame, textvariable=self.counter_var,)
         self.counter_label.pack(side=tk.RIGHT, padx=20)
+
+        # --- Parameters ---
+        self.v_base = - 0.05
 
         # --- CREATE OBJECTS ---
         # Rotation vector pair
@@ -465,9 +473,26 @@ class LeptonApp:
         if self.is_electron:
             self.rotation_vector_pair_1.set_mode(0)
             self.rotation_vector_pair_2.set_mode(0)
+            self.v_base = - 0.05
+            self.ax0.set_title("Electron")
         else:
             self.rotation_vector_pair_1.set_mode(1)
             self.rotation_vector_pair_2.set_mode(1)
+            self.v_base = - 0.05
+            self.ax0.set_title("Neutrino")
+
+    def toggle_mode_reverse(self):
+        self.is_electron = not self.is_electron
+        if self.is_electron:
+            self.rotation_vector_pair_1.set_mode(0)
+            self.rotation_vector_pair_2.set_mode(0)
+            self.v_base = - 0.05
+            self.ax0.set_title("Electron")
+        else:
+            self.rotation_vector_pair_1.set_mode(1)
+            self.rotation_vector_pair_2.set_mode(1)
+            self.v_base = + 0.05
+            self.ax0.set_title("Anti-neutrino")
 
     def toggle_play(self):
         self.is_playing = not self.is_playing
@@ -479,14 +504,14 @@ class LeptonApp:
         if self.is_playing:
             self.frame_count += 1
             self.counter_var.set(f"Step: {self.frame_count}")
-            v_base = - 0.05
+            # self.v_base = - 0.05
 
-            self.rotation_vector_pair_1.rotate_phase(v_base)
+            self.rotation_vector_pair_1.rotate_phase(self.v_base)
 
-            self.rotation_vector_pair_2.apply_rotation(v_base, np.array([0., 0., 1.]))
+            self.rotation_vector_pair_2.apply_rotation(self.v_base, np.array([0., 0., 1.]))
             origin = self.rotation_vector_pair_1.get_phase_point_2()
             self.rotation_vector_pair_2.set_origin(origin)
-            self.rotation_vector_pair_2.rotate_phase(v_base)
+            self.rotation_vector_pair_2.rotate_phase(self.v_base)
 
             self.canvas.draw_idle()
 
