@@ -282,20 +282,24 @@ class RotationVectorPair:
 
         # --- Rotation vectors ---
         self.rotation_vector1 = RotationVector(self.ax, ls0=self.ls_v1, color=self.color_v1)
-        self.rotation_vector1.apply_rotation(np.pi / 4, self._basis_1)
+        # self.rotation_vector1.apply_rotation(np.pi / 4, self._basis_1)
+        self.rotation_vector1.apply_rotation(- np.pi / 4, self._basis_1)
         self.rotation_vector1.set_origin(self._basis_1 * self.radius)
 
         self.rotation_vector2 = RotationVector(self.ax, ls0=self.ls_v2, color=self.color_v2)
-        self.rotation_vector2.apply_rotation(- np.pi / 4, self._basis_1)
+        # self.rotation_vector2.apply_rotation(- np.pi / 4, self._basis_1)
+        self.rotation_vector2.apply_rotation(np.pi / 4, self._basis_1)
         self.rotation_vector2.set_origin(- self._basis_1 * self.radius)
 
         # --- Rotation vectors ---
         self.color_charge1 = ColorCharge(self.ax, is_visible=self.is_visible_c1)
-        self.color_charge1.apply_rotation(np.pi / 4, self._basis_1)
+        # self.color_charge1.apply_rotation(np.pi / 4, self._basis_1)
+        self.color_charge1.apply_rotation(- np.pi / 4, self._basis_1)
         self.color_charge1.set_origin(self._basis_1 * self.radius)
 
         self.color_charge2 = ColorCharge(self.ax, is_visible=self.is_visible_c2)
-        self.color_charge2.apply_rotation(- np.pi / 4, self._basis_1)
+        # self.color_charge2.apply_rotation(- np.pi / 4, self._basis_1)
+        self.color_charge2.apply_rotation(np.pi / 4, self._basis_1)
         self.color_charge2.set_origin(- self._basis_1 * self.radius)
 
         # --- Update diagrams ---
@@ -447,7 +451,8 @@ class LeptonApp:
         self.counter_label.pack(side=tk.RIGHT, padx=20)
 
         # --- Parameters ---
-        self.v_base = - 0.05
+        # self.v_base = - 0.05
+        self.v_base = + 0.05
 
         # --- CREATE OBJECTS ---
         # Rotation vector pair
@@ -456,7 +461,8 @@ class LeptonApp:
 
         self.rotation_vector_pair_2 = RotationVectorPair(self.ax0, color_v1="red", color_v2="green",
                                                          ls_v1="-", ls_v2="-", is_visible_c1=True, is_visible_c2=True)
-        self.rotation_vector_pair_2.apply_rotation(- np.pi / 4, np.array([1., 0., 0.]))
+        # self.rotation_vector_pair_2.apply_rotation(- np.pi / 4, np.array([1., 0., 0.]))
+        self.rotation_vector_pair_2.apply_rotation(np.pi / 4, np.array([1., 0., 0.]))
         origin = self.rotation_vector_pair_1.get_phase_point_2()
         self.rotation_vector_pair_2.set_origin(origin)
 
@@ -473,12 +479,14 @@ class LeptonApp:
         if self.is_electron:
             self.rotation_vector_pair_1.set_mode(0)
             self.rotation_vector_pair_2.set_mode(0)
-            self.v_base = - 0.05
+            # self.v_base = - 0.05
+            self.v_base = + 0.05
             self.ax0.set_title("Electron")
         else:
             self.rotation_vector_pair_1.set_mode(1)
             self.rotation_vector_pair_2.set_mode(1)
-            self.v_base = - 0.05
+            # self.v_base = - 0.05
+            self.v_base = + 0.05
             self.ax0.set_title("Neutrino")
 
     def toggle_mode_reverse(self):
@@ -486,12 +494,14 @@ class LeptonApp:
         if self.is_electron:
             self.rotation_vector_pair_1.set_mode(0)
             self.rotation_vector_pair_2.set_mode(0)
-            self.v_base = - 0.05
+            # self.v_base = - 0.05
+            self.v_base = + 0.05
             self.ax0.set_title("Electron")
         else:
             self.rotation_vector_pair_1.set_mode(1)
             self.rotation_vector_pair_2.set_mode(1)
-            self.v_base = + 0.05
+            # self.v_base = 0.05
+            self.v_base = - 0.05
             self.ax0.set_title("Anti-neutrino")
 
     def toggle_play(self):
@@ -504,7 +514,6 @@ class LeptonApp:
         if self.is_playing:
             self.frame_count += 1
             self.counter_var.set(f"Step: {self.frame_count}")
-            # self.v_base = - 0.05
 
             self.rotation_vector_pair_1.rotate_phase(self.v_base)
 
