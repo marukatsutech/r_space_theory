@@ -192,6 +192,15 @@ class RotationVector:
         # --- Quiver ---
         self.quiver_arrow = None
 
+        # --- Trail ---
+        self.is_draw_trail = False
+
+        self.x_trail = []
+        self.y_trail = []
+        self.z_trail = []
+        self.trail, = self.ax.plot(np.array(self.x_trail), np.array(self.y_trail), np.array(self.z_trail),
+                                   color=self.color, linewidth=3, alpha=0.5)
+
         # --- Update diagrams ---
         self.update_diagrams()
 
@@ -213,6 +222,9 @@ class RotationVector:
             length=self.arrow_length, color=self.color, linewidth=self.lw,
             arrow_length_ratio=0.2, normalize=True, ls=self.ls
         )
+
+        # --- Trail ---
+        self.append_trail(self.origin)
 
     def apply_rotation(self, angle, axis_vector):
         rot = Rotation.from_rotvec(angle * axis_vector)
@@ -243,6 +255,25 @@ class RotationVector:
         self.plt_circle.set_linestyle(self.ls)
 
         self.update_diagrams()
+
+    def append_trail(self, position):
+        if self.is_draw_trail:
+            self.x_trail.append(position[0])
+            self.y_trail.append(position[1])
+            self.z_trail.append(position[2])
+            self.update_trail()
+
+    def update_trail(self):
+        self.trail.set_data_3d(np.array(self.x_trail), np.array(self.y_trail), np.array(self.z_trail))
+
+    def clear_trail(self):
+        self.x_trail = []
+        self.y_trail = []
+        self.z_trail = []
+        self.update_trail()
+
+    def set_is_draw_trail(self, value):
+        self.is_draw_trail = value
 
 
 # ==========================================
@@ -442,8 +473,14 @@ class LeptonApp:
 
         self.is_electron_1 = True
         self.btn_frame = ttk.Frame(self.root)
-        self.btn_frame.pack(fill=tk.X, pady=10)
+        self.btn_frame.pack(side="left", fill=tk.X, pady=10)
         ttk.Button(self.btn_frame, text="Electron / Anti-neutrino", command=self.toggle_mode_reverse).pack(side=tk.LEFT, padx=5)
+
+        # Toggle Trail
+        self.is_trail = False
+        self.btn_frame = ttk.Frame(self.root)
+        self.btn_frame.pack(fill=tk.X, pady=10)
+        ttk.Button(self.btn_frame, text="Trail on/off", command=self.toggle_trail).pack(side=tk.LEFT, padx=5)
 
         # counter label
         self.counter_var = tk.StringVar(value="Step: 0")
@@ -503,6 +540,15 @@ class LeptonApp:
             # self.v_base = 0.05
             self.v_base = - 0.05
             self.ax0.set_title("Anti-neutrino")
+
+    def toggle_trail(self):
+        self.is_trail = not self.is_trail
+        if self.is_trail:
+            self.rotation_vector_pair_2.rotation_vector1.set_is_draw_trail(True)
+            self.rotation_vector_pair_2.rotation_vector2.set_is_draw_trail(True)
+        else:
+            self.rotation_vector_pair_2.rotation_vector1.set_is_draw_trail(False)
+            self.rotation_vector_pair_2.rotation_vector2.set_is_draw_trail(False)
 
     def toggle_play(self):
         self.is_playing = not self.is_playing
