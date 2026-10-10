@@ -95,9 +95,9 @@ ax0.set_aspect("equal")
 tx_step = ax0.text(x_min, y_max * 0.9, " Step=" + str(0))
 tx_theta0 = ax0.text(x_min, y_max * 0.8, " Theta0=" + str(0) + "deg")
 tx_theta1 = ax0.text(x_min, y_max * 0.7, " Theta1=" + str(0) + "deg")
-circle = patches.Circle(xy=p0, radius=1, fill=False, color='gray')
+circle = patches.Circle(xy=p0, radius=1, fill=False, color="gray", lw=2)
 ax0.add_patch(circle)
-circle_d = patches.Circle(xy=p0_d, radius=1, fill=False, color='red')
+circle_d = patches.Circle(xy=p0_d, radius=1, fill=False, color="red", lw=2)
 ax0.add_patch(circle_d)
 
 x = np.linspace(x_min, x_max, num_of_points)
@@ -106,9 +106,9 @@ l0_x = r0 * np.cos(theta0 + np.pi / 2.)
 l0_y = r0 * np.sin(theta0 + np.pi / 2.)
 l1_x = l0_x + r1 * np.cos(theta0 * 2. + np.pi / 2.)
 l1_y = l0_y + r1 * np.sin(theta0 * 2. + np.pi / 2.)
-line0, = ax0.plot([0., l0_x], [0., l0_y], linewidth=2)
+line0, = ax0.plot([0., l0_x], [0., l0_y], linewidth=3)
 arrow1 = ax0.annotate('', xy=[l1_x, l1_y], xytext=[l0_x, l0_y],
-                      arrowprops=dict(width=1, headwidth=6, headlength=6,
+                      arrowprops=dict(width=2, headwidth=6, headlength=6,
                                       facecolor='darkorange', edgecolor='darkorange'))
 
 
@@ -118,7 +118,7 @@ a0 = r0 * np.cos(- theta + np.pi / 2.)
 b0 = r0 * np.sin(- theta + np.pi / 2.)
 a1 = a0 + r1 * np.cos(- theta * 2. + np.pi / 2.)
 b1 = b0 + r1 * np.sin(- theta * 2. + np.pi / 2.)
-curve, = ax0.plot(a1, b1, linestyle=':')
+curve, = ax0.plot(a1, b1, linestyle=':', lw=3)
 
 tx_coin0 = ax0.text(0, 0, "10", fontsize=36, c='gray', ha='center', va='center')
 tx_coin1 = ax0.text(0, 2, "10", fontsize=36, c='red', ha='center', va='center')
