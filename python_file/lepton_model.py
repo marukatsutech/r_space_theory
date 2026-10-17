@@ -544,9 +544,11 @@ class LeptonApp:
     def toggle_trail(self):
         self.is_trail = not self.is_trail
         if self.is_trail:
+            self.rotation_vector_pair_1.rotation_vector1.set_is_draw_trail(True)
             self.rotation_vector_pair_2.rotation_vector1.set_is_draw_trail(True)
             self.rotation_vector_pair_2.rotation_vector2.set_is_draw_trail(True)
         else:
+            self.rotation_vector_pair_1.rotation_vector1.set_is_draw_trail(False)
             self.rotation_vector_pair_2.rotation_vector1.set_is_draw_trail(False)
             self.rotation_vector_pair_2.rotation_vector2.set_is_draw_trail(False)
 
