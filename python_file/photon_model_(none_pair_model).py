@@ -342,7 +342,7 @@ class PhotonApp:
         self.rotation_vector_red.apply_rotation((np.pi / 2.), np.array([0., 1., 0.]))
 
         self.rotation_vector_green = RotationVector(self.ax, color='green', line_width=3)
-        self.rotation_vector_green.apply_rotation((np.pi / 2.), np.array([1., 0., 0.]))
+        self.rotation_vector_green.apply_rotation((-np.pi / 2.), np.array([1., 0., 0.]))
 
         self.rotation_vector_blue = RotationVector(self.ax, color='blue', line_width=3)
 
